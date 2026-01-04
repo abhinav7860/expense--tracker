@@ -21,6 +21,7 @@
  Git and GitHub
 
 -Project Structure
+```
 expensetracker/
 ├── expenses/
 │ ├── models.py
@@ -33,7 +34,7 @@ expensetracker/
 │ ├── urls.py
 │ └── wsgi.py
 └── manage.py
-
+```
 -How to Run the Server
  Step 1: Clone the Repository:
  git clone https://github.com/abhinav7860/expense--tracker.git
