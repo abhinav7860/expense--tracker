@@ -1,0 +1,159 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Dashboard | Expense Tracker</title>
+    <link rel="stylesheet" href="{% static 'expenses/css/dashboard.css' %}">
+</head>
+<body>
+<!-- COIN RAIN BACKGROUND -->
+<div class="coin-rain">
+  <span class="coin"></span>
+  <span class="coin"></span>
+  <span class="coin"></span>
+  <span class="coin"></span>
+  <span class="coin"></span>
+  <span class="coin"></span>
+  <span class="coin"></span>
+  <span class="coin"></span>
+</div>
+
+
+<!-- NAVBAR -->
+<nav class="navbar">
+    <div class="nav-left">
+        <span class="logo">💼 Expense Tracker</span>
+        <div class="nav-links">
+            <a href="{% url 'home' %}" class="nav-link">Home</a>
+            <a href="{% url 'dashboard' %}" class="nav-link active">Dashboard</a>
+            <a href="#add-expense" class="nav-link">Add Expense</a>
+        </div>
+    </div>
+
+    <div class="nav-right">
+        <span class="user-badge">👤 {{ request.user.username }}</span>
+        <a href="{% url 'logout' %}" class="logout-btn">Logout</a>
+    </div>
+</nav>
+
+<!-- MAIN -->
+<div class="container">
+
+    <h1>Dashboard</h1>
+    <p class="subtitle">Manage, filter, and track your expenses.</p>
+
+    <!-- STATS -->
+    <div class="stats">
+        <div class="card stat-card">
+            <p>Total Expense</p>
+            <h2 id="totalExpense" data-value="{{ total_expense }}">
+                ₹ {{ total_expense }}
+            </h2>
+        </div>
+
+        <div class="card stat-card">
+            <p>Total Entries</p>
+            <h2 id="totalEntries" data-value="{{ total_entries }}">
+                {{ total_entries }}
+            </h2>
+        </div>
+
+        <div class="card stat-card">
+            <p>Status</p>
+            <h2 class="active">Active</h2>
+        </div>
+    </div>
+
+    <!-- ADD EXPENSE -->
+    <div class="box" id="add-expense">
+        <h3>➕ Add New Expense</h3>
+        <form method="POST">
+            {% csrf_token %}
+            <input type="text" name="title" placeholder="Title" required>
+            <input type="number" name="amount" placeholder="Amount" required>
+
+            <select name="category" required>
+                <option>Select Category</option>
+                <option>Food</option>
+                <option>Travel</option>
+                <option>Rent</option>
+                <option>Shopping</option>
+                <option>Bills</option>
+                <option>Other</option>
+            </select>
+
+            <input type="date" name="date" required>
+            <button type="submit">Add Expense</button>
+        </form>
+    </div>
+
+    <!-- HISTORY -->
+    <div class="box">
+        <h3>📊 Expense History</h3>
+
+        {% if expenses %}
+        <div class="table-wrapper">
+            <table class="expense-table">
+                <thead>
+                    <tr>
+                        <th>Title</th>
+                        <th>Category</th>
+                        <th>Amount</th>
+                        <th>Date</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for expense in expenses %}
+                    <tr>
+                        <td>{{ expense.title }}</td>
+                        <td>
+                            <span class="category-tag {{ expense.category|lower }}">
+                                {{ expense.category }}
+                            </span>
+                        </td>
+                        <td class="amount">₹ {{ expense.amount }}</td>
+                        <td>{{ expense.date }}</td>
+                        <td>
+                            <a href="{% url 'update_expense' expense.id %}" class="action edit">Edit</a>
+                            <a href="{% url 'delete_expense' expense.id %}" class="action delete">Delete</a>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+        {% else %}
+        <p class="empty">No expenses added yet.</p>
+        {% endif %}
+    </div>
+
+</div>
+
+<!-- MONEY INTERACTIONS -->
+<script>
+function animateMoney(id, prefix = "₹ ") {
+    const el = document.getElementById(id);
+    const value = parseInt(el.dataset.value);
+    let current = 0;
+    const step = Math.max(1, Math.floor(value / 40));
+
+    const timer = setInterval(() => {
+        current += step;
+        if (current >= value) {
+            el.innerText = prefix + value.toLocaleString("en-IN");
+            el.classList.add("money-pulse");
+            clearInterval(timer);
+        } else {
+            el.innerText = prefix + current.toLocaleString("en-IN");
+        }
+    }, 18);
+}
+
+animateMoney("totalExpense");
+animateMoney("totalEntries", "");
+</script>
+
+</body>
+</html>

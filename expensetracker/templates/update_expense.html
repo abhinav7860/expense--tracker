@@ -1,0 +1,79 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Update Expense</title>
+    <link rel="stylesheet" href="{% static 'expenses/css/dashboard.css' %}">
+</head>
+<body>
+
+<!-- NAVBAR -->
+<nav class="navbar">
+    <div class="nav-left">
+        <span class="logo">💼 Expense Tracker</span>
+    </div>
+    <div class="nav-right">
+        <a href="{% url 'dashboard' %}" class="logout-btn">⬅ Back to Dashboard</a>
+    </div>
+</nav>
+
+<!-- CENTERED UPDATE PAGE -->
+<div class="update-page">
+
+    <!-- HEADER -->
+    <div class="update-header">
+        <h1>Update Expense</h1>
+        <p class="subtitle">Modify your expense details below.</p>
+    </div>
+
+    <!-- FORM CARD -->
+    <div class="box update-box">
+        <form method="POST" class="update-form">
+            {% csrf_token %}
+
+            <input
+                type="text"
+                name="title"
+                placeholder="Title"
+                value="{{ expense.title }}"
+                required
+            >
+
+            <input
+                type="number"
+                name="amount"
+                placeholder="Amount"
+                value="{{ expense.amount }}"
+                required
+            >
+
+            <select name="category" required>
+                <option value="{{ expense.category }}" selected>
+                    {{ expense.category }}
+                </option>
+                <option>Food</option>
+                <option>Travel</option>
+                <option>Rent</option>
+                <option>Shopping</option>
+                <option>Bills</option>
+                <option>Other</option>
+            </select>
+
+            <input
+                type="date"
+                name="date"
+                value="{{ expense.date|date:'Y-m-d' }}"
+                required
+            >
+
+            <button type="submit" class="update-btn">
+                Update Expense
+            </button>
+        </form>
+    </div>
+
+</div>
+
+</body>
+</html>
