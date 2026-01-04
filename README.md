@@ -1,4 +1,4 @@
-##-Expense Tracker (Django)
+##Expense Tracker (Django)
  This is a web-based Expense Tracker application developed using Django.  
  The application allows users to register, log in, and manage their personal expenses securely.  
  Each user can add, edit, delete, and view only their own expenses.
